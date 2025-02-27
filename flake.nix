@@ -7,7 +7,10 @@
     let
       supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
       });
     in
     {
@@ -16,8 +19,11 @@
           packages = with pkgs; [
             php
             phpPackages.composer
+            phpPackages.php-cs-fixer
+            phpPackages.phpstan
             nodejs
             nodePackages.pnpm
+            nodePackages.intelephense
             mysql80
             git
             curl

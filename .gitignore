@@ -27,4 +27,5 @@ Homestead.json
 auth.json
 
 .mysql-data/
+mysql-data/
 .direnv/

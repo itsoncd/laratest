@@ -28,7 +28,7 @@ class TaskController extends Controller
 
         Task::create($request->all());
         return redirect()->route('tasks.index')
-            ->with('success', 'Task created successfully.');
+            ->with('success', 'Tarea creada exitosamente.');
     }
 
     public function show(Task $task)
@@ -50,15 +50,14 @@ class TaskController extends Controller
         ]);
 
         $task->update($request->all());
-
         return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully.');
+            ->with('success', 'Tarea actualizada exitosamente.');
     }
 
     public function destroy(Task $task)
     {
         $task->delete();
         return redirect()->route('tasks.index')
-            ->with('success', 'Task deleted successfully.');
+            ->with('success', 'Tarea eliminada exitosamente.');
     }
 }

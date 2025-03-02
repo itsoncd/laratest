@@ -29,3 +29,4 @@ auth.json
 .mysql-data/
 mysql-data/
 .direnv/
+.envrc

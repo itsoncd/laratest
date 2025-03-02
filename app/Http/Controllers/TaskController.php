@@ -31,12 +31,12 @@ class TaskController extends Controller
             ->with('success', 'Task created successfully.');
     }
 
-    public function show(string $id)
+    public function show(Task $task)
     {
         return view('tasks.show', compact('task'));
     }
 
-    public function edit(string $id)
+    public function edit(Task $task)
     {
         return view('tasks.edit', compact('task'));
     }

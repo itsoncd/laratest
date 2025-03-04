@@ -1,0 +1,57 @@
+name: Probar estructura de directorios
+
+on: workflow_dispatch
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear archivos de prueba
+        run: |
+          # Directorios para probar la ruta raíz
+          mkdir -p test/foo
+          mkdir -p test/bar
+          echo "Archivo de prueba en foo" > test/foo/test.txt
+          echo "Archivo de prueba en bar" > test/bar/test.txt
+          
+          # Directorios para probar la ruta public_html
+          mkdir -p test/baz
+          mkdir -p test/qux
+          echo "Archivo de prueba en baz" > test/baz/test.txt
+          echo "Archivo de prueba en qux" > test/qux/test.txt
+      
+      - name: Probar ruta raíz (foo y bar)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./test/foo/
+          server-dir: ./foo/
+          
+      - name: Probar ruta raíz secundaria (bar)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./test/bar/
+          server-dir: ./bar/
+          
+      - name: Probar ruta public_html (baz)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./test/baz/
+          server-dir: ./public_html/baz/
+          
+      - name: Probar ruta public_html (qux)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./test/qux/
+          server-dir: ./public_html/qux/

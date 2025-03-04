@@ -1,8 +1,6 @@
 name: Desplegar a Hostinger
 
-on:
-  push:
-    branches: [ main ]
+on: workflow_dispatch
 
 jobs:
   desplegar:

@@ -36,8 +36,8 @@ jobs:
           rsync -av public/ deploy/public_html/
           
           # arreglar rutas de archivos en index.php
-          sed -i "s|__DIR__\.'/../|__DIR__\.'/../../../laravel/|g" deploy/public_html/index.php
-          
+          sed -i "s|__DIR__\.'/../|__DIR__\.'/../laravel/|g" deploy/public_html/index.php
+
           # copiar .env a directorio laravel
           cp .env deploy/laravel/.env
 

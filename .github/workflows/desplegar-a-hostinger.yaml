@@ -1,6 +1,8 @@
 name: Desplegar a Hostinger
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   desplegar:
@@ -26,24 +28,33 @@ jobs:
           # crear directorios
           mkdir -p deploy/laravel
           mkdir -p deploy/public_html
-
+          
           # copiar archivos de aplicación (excluyendo el directorio public)
           rsync -av --exclude='public' --exclude='.git' --exclude='.github' --exclude='deploy' ./ deploy/laravel/
-
+          
           # copiar archivos públicos a public_html
           rsync -av public/ deploy/public_html/
-
+          
           # arreglar rutas de archivos en index.php
-          sed -i "s|__DIR__\.'/../|__DIR__\.'/../laravel/|g" deploy/public_html/index.php
-
+          sed -i "s|__DIR__\.'/../|__DIR__\.'/../../../laravel/|g" deploy/public_html/index.php
+          
           # copiar .env a directorio laravel
           cp .env deploy/laravel/.env
 
-      - name: Desplegar a Hostinger
+      - name: Desplegar Laravel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./deploy/
+          local-dir: ./deploy/laravel/
+          server-dir: /laravel/
+
+      - name: Desplegar archivos públicos
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy/public_html/
           server-dir: ./

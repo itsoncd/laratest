@@ -17,10 +17,10 @@
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            php
-            phpPackages.composer
-            phpPackages.php-cs-fixer
-            phpPackages.phpstan
+            php82
+            php82Packages.composer
+            php82Packages.php-cs-fixer
+            php82Packages.phpstan
             nodejs
             nodePackages.pnpm
             nodePackages.intelephense

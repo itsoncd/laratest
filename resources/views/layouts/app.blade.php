@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('tasks.index') }}">Laratest - Organizador de tareas (modificación trivial)</a>
+            <a class="navbar-brand" href="{{ route('tasks.index') }}">Laratest - Organizador de tareas</a>
         </div>
     </nav>
 

@@ -1,0 +1,50 @@
+name: Desplegar a Hostinger
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, curl, zip, pdo_mysql
+
+      - name: Preparar archivo .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          cp .env deploy/laravel/.env
+
+      - name: Instalar dependencias con Composer
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Preparar estructura de despliegue
+        run: |
+          # crear directorios
+          mkdir -p deploy/laravel
+          mkdir -p deploy/public_html
+
+          # copiar archivos de aplicación (excluyendo el directorio public)
+          rsync -av --exclude='public' --exclude='.git' --exclude='.github' --exclude='deploy' ./ deploy/laravel/
+
+          # copiar archivos públicos a public_html
+          rsync -av public/ deploy/public_html/
+
+          # arreglar rutas de archivos en index.php
+          sed -i "s|__DIR__\.'/../|__DIR__\.'/../laravel/|g" deploy/public_html/index.php
+
+      - name: Desplegar a Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy/
+          server-dir: ./

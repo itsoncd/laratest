@@ -17,10 +17,8 @@ jobs:
           php-version: '8.2'
           extensions: mbstring, intl, gd, curl, zip, pdo_mysql
 
-      - name: Preparar archivo .env
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
-          cp .env deploy/laravel/.env
+      - name: Crear archivo .env temporal
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Instalar dependencias con Composer
         run: composer install --no-dev --optimize-autoloader --no-interaction
@@ -39,6 +37,9 @@ jobs:
 
           # arreglar rutas de archivos en index.php
           sed -i "s|__DIR__\.'/../|__DIR__\.'/../laravel/|g" deploy/public_html/index.php
+
+          # copiar .env a directorio laravel
+          cp .env deploy/laravel/.env
 
       - name: Desplegar a Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
